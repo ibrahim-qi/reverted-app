@@ -20,10 +20,12 @@ import {
 } from '../utils/storage';
 import { UserPreferences, CalculationMethod } from '../types';
 import { ZakatCalculator } from '../components/ZakatCalculator';
+import { MosqueFinder } from '../components/MosqueFinder';
 
 const SettingsScreen: React.FC = () => {
   const [preferences, setPreferences] = useState<UserPreferences | null>(null);
   const [showZakatCalculator, setShowZakatCalculator] = useState(false);
+  const [showMosqueFinder, setShowMosqueFinder] = useState(false);
 
   useEffect(() => {
     loadPreferences();
@@ -202,6 +204,21 @@ const SettingsScreen: React.FC = () => {
               <Ionicons name="calculator" size={20} color={Colors.primary} />
             </View>
           </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.settingItem}
+            onPress={() => setShowMosqueFinder(true)}
+          >
+            <View style={styles.settingRow}>
+              <View style={styles.settingInfo}>
+                <Text style={styles.settingLabel}>Mosque Finder</Text>
+                <Text style={styles.settingDescription}>
+                  Find nearby mosques and prayer times
+                </Text>
+              </View>
+              <Ionicons name="location" size={20} color={Colors.primary} />
+            </View>
+          </TouchableOpacity>
         </View>
 
         {/* App Settings */}
@@ -255,6 +272,21 @@ const SettingsScreen: React.FC = () => {
       {showZakatCalculator && (
         <View style={styles.modalOverlay}>
           <ZakatCalculator onClose={() => setShowZakatCalculator(false)} />
+        </View>
+      )}
+
+      {/* Mosque Finder Modal */}
+      {showMosqueFinder && (
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Mosque Finder</Text>
+              <TouchableOpacity onPress={() => setShowMosqueFinder(false)}>
+                <Ionicons name="close" size={24} color={Colors.text.primary} />
+              </TouchableOpacity>
+            </View>
+            <MosqueFinder />
+          </View>
         </View>
       )}
     </SafeAreaView>
@@ -364,6 +396,34 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.overlay,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  modalContainer: {
+    backgroundColor: Colors.surface,
+    borderRadius: 16,
+    margin: 20,
+    maxHeight: '90%',
+    width: '90%',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.divider,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: Colors.text.primary,
   },
 });
 

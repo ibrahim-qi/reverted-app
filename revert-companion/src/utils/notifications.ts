@@ -67,10 +67,7 @@ export async function schedulePrayerNotification(
         sound: preferences.notifications.sound ? 'default' : undefined,
         data: { prayerName, prayerTime },
       },
-      trigger: {
-        date: notificationTime,
-        repeats: false,
-      },
+      trigger: notificationTime,
     });
 
     return identifier;

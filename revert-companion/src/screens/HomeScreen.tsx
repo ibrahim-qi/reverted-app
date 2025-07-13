@@ -18,6 +18,7 @@ import { GradientCard } from '../components/GradientCard';
 import { PrayerTimeCard } from '../components/PrayerTimeCard';
 import { PrayerTracker } from '../components/PrayerTracker';
 import { IslamicCalendar } from '../components/IslamicCalendar';
+import { ProgressTracker } from '../components/ProgressTracker';
 import { DAILY_VERSES } from '../constants/learningContent';
 import { calculatePrayerTimes, getNextPrayer } from '../utils/prayerCalculations';
 import { getUserLocation, saveUserLocation, getUserPreferences, getUserProgress, recordPrayer } from '../utils/storage';
@@ -201,6 +202,14 @@ const HomeScreen: React.FC = () => {
             onTogglePrayer={togglePrayer}
             streak={progress.streak}
             totalPoints={progress.totalPoints}
+          />
+        )}
+
+        {/* Progress Tracker */}
+        {progress && (
+          <ProgressTracker 
+            progress={progress}
+            onViewAchievements={() => navigation.navigate('Learn')}
           />
         )}
       </ScrollView>
