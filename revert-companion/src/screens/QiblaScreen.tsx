@@ -66,24 +66,28 @@ const QiblaScreen: React.FC = () => {
   };
 
   const startMagnetometer = async () => {
-    const { status } = await Magnetometer.requestPermissionsAsync();
-    if (status !== 'granted') {
-      console.log('Permission to access magnetometer was denied');
-      return;
-    }
+    try {
+      const { status } = await Magnetometer.requestPermissionsAsync();
+      if (status !== 'granted') {
+        console.log('Permission to access magnetometer was denied');
+        return;
+      }
 
-    Magnetometer.setUpdateInterval(100);
-    
-    const sub = Magnetometer.addListener((data) => {
-      let angle = Math.atan2(data.y, data.x);
-      angle = angle * (180 / Math.PI);
-      angle = angle + 90;
-      angle = (angle + 360) % 360;
+      Magnetometer.setUpdateInterval(100);
       
-      setMagnetometer(Math.round(angle));
-    });
+      const sub = Magnetometer.addListener((data) => {
+        let angle = Math.atan2(data.y, data.x);
+        angle = angle * (180 / Math.PI);
+        angle = angle + 90;
+        angle = (angle + 360) % 360;
+        
+        setMagnetometer(Math.round(angle));
+      });
 
-    setSubscription(sub);
+      setSubscription(sub);
+    } catch (error) {
+      console.error('Error starting magnetometer:', error);
+    }
   };
 
   const getCompassRotation = () => {

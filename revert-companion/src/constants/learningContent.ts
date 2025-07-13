@@ -338,20 +338,46 @@ export const ESSENTIAL_DUAS: Dua[] = [
   },
 ];
 
+// Daily verses for the home screen
 export const DAILY_VERSES = [
   {
-    arabic: 'إِنَّ مَعَ الْعُسْرِ يُسْرًا',
-    translation: 'Indeed, with hardship comes ease.',
-    reference: 'Quran 94:6',
+    arabic: 'إِنَّ اللَّهَ مَعَ الصَّابِرِينَ',
+    translation: 'Indeed, Allah is with the patient.',
+    reference: 'Quran 2:153'
   },
   {
-    arabic: 'وَتَوَكَّلْ عَلَى اللَّهِ ۚ وَكَفَىٰ بِاللَّهِ وَكِيلًا',
-    translation: 'And rely upon Allah; and sufficient is Allah as Disposer of affairs.',
-    reference: 'Quran 33:3',
+    arabic: 'وَمَا تَوْفِيقِي إِلَّا بِاللَّهِ',
+    translation: 'My success is not but through Allah.',
+    reference: 'Quran 11:88'
   },
   {
-    arabic: 'فَاذْكُرُونِي أَذْكُرْكُمْ',
-    translation: 'So remember Me; I will remember you.',
-    reference: 'Quran 2:152',
+    arabic: 'رَبِّ زِدْنِي عِلْمًا',
+    translation: 'My Lord, increase me in knowledge.',
+    reference: 'Quran 20:114'
   },
+  {
+    arabic: 'إِنَّ اللَّهَ لَا يُغَيِّرُ مَا بِقَوْمٍ حَتَّى يُغَيِّرُوا مَا بِأَنْفُسِهِمْ',
+    translation: 'Indeed, Allah will not change the condition of a people until they change what is in themselves.',
+    reference: 'Quran 13:11'
+  },
+  {
+    arabic: 'فَإِنَّ مَعَ الْعُسْرِ يُسْرًا',
+    translation: 'For indeed, with hardship [will be] ease.',
+    reference: 'Quran 94:5'
+  },
+  {
+    arabic: 'وَلَا تَيْأَسُوا مِن رَّوْحِ اللَّهِ',
+    translation: 'And do not despair of the mercy of Allah.',
+    reference: 'Quran 39:53'
+  },
+  {
+    arabic: 'إِنَّ اللَّهَ يُحِبُّ الْمُحْسِنِينَ',
+    translation: 'Indeed, Allah loves the doers of good.',
+    reference: 'Quran 2:195'
+  },
+  {
+    arabic: 'وَمَنْ يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا',
+    translation: 'And whoever fears Allah, He will make for him a way out.',
+    reference: 'Quran 65:2'
+  }
 ];

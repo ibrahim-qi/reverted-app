@@ -19,9 +19,11 @@ import {
   clearAllData 
 } from '../utils/storage';
 import { UserPreferences, CalculationMethod } from '../types';
+import { ZakatCalculator } from '../components/ZakatCalculator';
 
 const SettingsScreen: React.FC = () => {
   const [preferences, setPreferences] = useState<UserPreferences | null>(null);
+  const [showZakatCalculator, setShowZakatCalculator] = useState(false);
 
   useEffect(() => {
     loadPreferences();
@@ -182,6 +184,26 @@ const SettingsScreen: React.FC = () => {
           )}
         </View>
 
+        {/* Islamic Tools */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Islamic Tools</Text>
+          
+          <TouchableOpacity 
+            style={styles.settingItem}
+            onPress={() => setShowZakatCalculator(true)}
+          >
+            <View style={styles.settingRow}>
+              <View style={styles.settingInfo}>
+                <Text style={styles.settingLabel}>Zakat Calculator</Text>
+                <Text style={styles.settingDescription}>
+                  Calculate your Zakat obligation
+                </Text>
+              </View>
+              <Ionicons name="calculator" size={20} color={Colors.primary} />
+            </View>
+          </TouchableOpacity>
+        </View>
+
         {/* App Settings */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>App Settings</Text>
@@ -228,6 +250,13 @@ const SettingsScreen: React.FC = () => {
           </Text>
         </View>
       </ScrollView>
+
+      {/* Zakat Calculator Modal */}
+      {showZakatCalculator && (
+        <View style={styles.modalOverlay}>
+          <ZakatCalculator onClose={() => setShowZakatCalculator(false)} />
+        </View>
+      )}
     </SafeAreaView>
   );
 };
@@ -325,6 +354,16 @@ const styles = StyleSheet.create({
     color: Colors.text.secondary,
     lineHeight: 20,
     marginTop: 8,
+  },
+  modalOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: Colors.overlay,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

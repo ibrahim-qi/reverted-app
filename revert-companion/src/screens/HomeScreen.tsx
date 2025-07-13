@@ -16,10 +16,12 @@ import * as Location from 'expo-location';
 import { Colors } from '../constants/colors';
 import { GradientCard } from '../components/GradientCard';
 import { PrayerTimeCard } from '../components/PrayerTimeCard';
+import { PrayerTracker } from '../components/PrayerTracker';
+import { IslamicCalendar } from '../components/IslamicCalendar';
 import { DAILY_VERSES } from '../constants/learningContent';
 import { calculatePrayerTimes, getNextPrayer } from '../utils/prayerCalculations';
-import { getUserLocation, saveUserLocation, getUserPreferences } from '../utils/storage';
-import { PrayerTimes, Location as LocationType } from '../types';
+import { getUserLocation, saveUserLocation, getUserPreferences, getUserProgress, recordPrayer } from '../utils/storage';
+import { PrayerTimes, Location as LocationType, Progress } from '../types';
 import { RootTabParamList } from '../navigation/AppNavigator';
 
 type NavigationProp = BottomTabNavigationProp<RootTabParamList>;
@@ -31,16 +33,39 @@ const HomeScreen: React.FC = () => {
   const [dailyVerse, setDailyVerse] = useState(DAILY_VERSES[0]);
   const [refreshing, setRefreshing] = useState(false);
   const [location, setLocation] = useState<LocationType | null>(null);
+  const [progress, setProgress] = useState<Progress | null>(null);
+  const [todaysPrayers, setTodaysPrayers] = useState({
+    fajr: false,
+    dhuhr: false,
+    asr: false,
+    maghrib: false,
+    isha: false,
+  });
 
   useEffect(() => {
     loadPrayerTimes();
     selectDailyVerse();
+    loadProgress();
   }, []);
 
   const selectDailyVerse = () => {
     const today = new Date().getDate();
     const verseIndex = today % DAILY_VERSES.length;
     setDailyVerse(DAILY_VERSES[verseIndex]);
+  };
+
+  const loadProgress = async () => {
+    try {
+      const userProgress = await getUserProgress();
+      setProgress(userProgress);
+      
+      const today = new Date().toISOString().split('T')[0];
+      if (userProgress.dailyPrayers[today]) {
+        setTodaysPrayers(userProgress.dailyPrayers[today]);
+      }
+    } catch (error) {
+      console.error('Error loading progress:', error);
+    }
   };
 
   const loadPrayerTimes = async () => {
@@ -72,9 +97,24 @@ const HomeScreen: React.FC = () => {
     }
   };
 
+  const togglePrayer = async (prayer: 'fajr' | 'dhuhr' | 'asr' | 'maghrib' | 'isha') => {
+    const newStatus = !todaysPrayers[prayer];
+    const today = new Date().toISOString().split('T')[0];
+    
+    await recordPrayer(today, prayer, newStatus);
+    
+    setTodaysPrayers(prev => ({
+      ...prev,
+      [prayer]: newStatus,
+    }));
+    
+    await loadProgress();
+  };
+
   const onRefresh = async () => {
     setRefreshing(true);
     await loadPrayerTimes();
+    await loadProgress();
     setRefreshing(false);
   };
 
@@ -151,30 +191,18 @@ const HomeScreen: React.FC = () => {
           </View>
         </View>
 
-        {/* Today's Progress */}
-        <GradientCard
-          colors={[Colors.accent, Colors.accentLight]}
-          style={styles.progressCard}
-        >
-          <Text style={styles.progressTitle}>Today's Progress</Text>
-          <View style={styles.progressStats}>
-            <View style={styles.progressItem}>
-              <Ionicons name="flame" size={24} color={Colors.secondary} />
-              <Text style={styles.progressValue}>0</Text>
-              <Text style={styles.progressLabel}>Streak</Text>
-            </View>
-            <View style={styles.progressItem}>
-              <Ionicons name="checkmark-circle" size={24} color={Colors.secondary} />
-              <Text style={styles.progressValue}>0/5</Text>
-              <Text style={styles.progressLabel}>Prayers</Text>
-            </View>
-            <View style={styles.progressItem}>
-              <Ionicons name="trophy" size={24} color={Colors.secondary} />
-              <Text style={styles.progressValue}>0</Text>
-              <Text style={styles.progressLabel}>Points</Text>
-            </View>
-          </View>
-        </GradientCard>
+        {/* Islamic Calendar */}
+        <IslamicCalendar gregorianDate={new Date()} />
+
+        {/* Prayer Tracker */}
+        {progress && (
+          <PrayerTracker
+            prayers={todaysPrayers}
+            onTogglePrayer={togglePrayer}
+            streak={progress.streak}
+            totalPoints={progress.totalPoints}
+          />
+        )}
       </ScrollView>
     </SafeAreaView>
   );
